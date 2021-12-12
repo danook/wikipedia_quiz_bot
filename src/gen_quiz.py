@@ -1,16 +1,14 @@
 import re
 import random
-from logging import INFO, FileHandler, getLogger
 from quiz import Quiz
 from wikipedia_page import WikipediaPage
+import log
 
 INVALID = -1
 OPTIONS = 4
 MAX_TWEET_LENGTH = 140
 
-logger = getLogger(__name__)
-logger.setLevel(INFO)
-logger.addHandler(FileHandler("log/test.log"))
+logger = log.get_logger(__name__, "log/test.log")
 
 
 def format_extract(title, extract):
@@ -32,7 +30,7 @@ def format_extract(title, extract):
             MAX_TWEET_LENGTH))
         return INVALID
     extract = extract[:(period_index + 1)]
-    logger.info("Generated sentence: " + extract)
+    logger.debug("Generated sentence: " + extract)
     return extract
 
 
@@ -44,8 +42,8 @@ def get_mutual_link_pages(link_to, linked_from):
         return INVALID
     else:
         random.shuffle(mutual_links)
-        logger.info("Quiz options (except the answer): " +
-                    ", ".join(mutual_links[:(OPTIONS - 1)]))
+        logger.debug("Quiz options (except the answer): " +
+                     ", ".join(mutual_links[:(OPTIONS - 1)]))
         return mutual_links[:(OPTIONS - 1)]
 
 
@@ -61,7 +59,8 @@ def gen_quiz(wikipediaPage: WikipediaPage):
     options = mutual_links
     options.append(wikipediaPage.title)
     random.shuffle(options)
-    logger.info("Generated options: " + ", ".join(options))
+    logger.debug("Generated options: " + ", ".join(options))
 
     quiz = Quiz(sentence, options, wikipediaPage.title)
+    logger.info("Quiz generated successfully")
     return quiz

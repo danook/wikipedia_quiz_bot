@@ -1,8 +1,11 @@
+import log
 from wikipedia_page import WikipediaPage
 
 LANGUAGE = "ja"
 NAMESPACE_MAIN = 0
 BASE_URL = 'https://' + LANGUAGE + '.wikipedia.org/w/api.php'
+
+logger = log.get_logger(__name__, "log/test.log")
 
 
 def get_most_viewed_page_ids(session):
@@ -15,6 +18,7 @@ def get_most_viewed_page_ids(session):
     resultJson = session.get(
         BASE_URL,
         params=params).json()
+    logger.info("Get a list of mostviewed pages")
 
     idlist = list()
     for page in resultJson['query']['pages'].values():
@@ -38,6 +42,7 @@ def get_page_info(id, session):
     resultJson = session.get(
         BASE_URL,
         params=params).json()
+    logger.info("Get the page data (id={0})".format(id))
 
     pageJson = resultJson['query']['pages'][str(id)]
     wikipediaPage = WikipediaPage(
@@ -45,4 +50,5 @@ def get_page_info(id, session):
         pageJson['extract'],
         [page['title'] for page in pageJson['links']],
         [page['title'] for page in pageJson['linkshere']])
+
     return wikipediaPage
