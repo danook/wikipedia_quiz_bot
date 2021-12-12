@@ -1,4 +1,3 @@
-import requests
 from wikipedia_page import WikipediaPage
 
 LANGUAGE = "ja"
@@ -47,15 +46,3 @@ def get_page_info(id, session):
         [page['title'] for page in pageJson['links']],
         [page['title'] for page in pageJson['linkshere']])
     return wikipediaPage
-
-
-# TEST
-if __name__ == '__main__':
-    with requests.Session() as session:
-        pageids = get_most_viewed_page_ids(session)
-        print(pageids)
-        page = get_page_info(pageids[0], session)
-        print(page.title)
-        print(page.link_to)
-        print(page.linked_from)
-        print(page.extract)
