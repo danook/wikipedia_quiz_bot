@@ -1,6 +1,7 @@
 wikiqbot_env/
 design.md
 *.json
+*.log
 src/__pycache__
 src/test.py
-log/
+src/twitter_api_tokens.py

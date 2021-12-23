@@ -1,11 +1,18 @@
 import log
-from wikipedia_page import WikipediaPage
 
 LANGUAGE = "ja"
 NAMESPACE_MAIN = 0
 BASE_URL = 'https://' + LANGUAGE + '.wikipedia.org/w/api.php'
 
 logger = log.get_logger(__name__, "log/test.log")
+
+
+class WikipediaPage:
+    def __init__(self, title, extract, link_to, linked_from):
+        self.title = title
+        self.extract = extract
+        self.link_to = link_to
+        self.linked_from = linked_from
 
 
 def get_most_viewed_page_ids(session):
