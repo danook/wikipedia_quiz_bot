@@ -2,10 +2,7 @@ import re
 import random
 from wikipedia import WikipediaPage
 import log
-
-INVALID = -1
-OPTIONS = 4
-MAX_TWEET_LENGTH = 140
+import utils
 
 logger = log.get_logger(__name__, "log/test.log")
 
@@ -29,13 +26,13 @@ def format_extract(title, extract):
     else:
         logger.info(
             "Failed to generate a quiz: the sentence does not start with the title of the article.")
-        return INVALID
+        return utils.INVALID
     # Extract sentences so that string becomes shorter than 140 characters
-    period_index = extract[:(MAX_TWEET_LENGTH - 1)].rfind('。')
+    period_index = extract[:(utils.MAX_TWEET_LENGTH - 1)].rfind('。')
     if period_index == -1:
         logger.info("Failed to generate a quiz: the first sentence is longer than the maximum tweet length ({0} letters).".format(
-            MAX_TWEET_LENGTH))
-        return INVALID
+            utils.MAX_TWEET_LENGTH))
+        return utils.INVALID
     extract = extract[:(period_index + 1)]
     logger.debug("Generated sentence: " + extract)
     return extract
@@ -43,26 +40,26 @@ def format_extract(title, extract):
 
 def get_mutual_link_pages(link_to, linked_from):
     mutual_links = list(set(link_to) & set(linked_from))
-    if len(mutual_links) < OPTIONS - 1:
+    if len(mutual_links) < utils.TWEET_OPTIONS - 1:
         logger.info(
             "Failed to generate a quiz: shortage of mutually-linked pages (there are only {0}).".format(len(mutual_links)))
-        return INVALID
+        return utils.INVALID
     else:
         random.shuffle(mutual_links)
         logger.debug("Quiz options (except the answer): " +
-                     ", ".join(mutual_links[:(OPTIONS - 1)]))
-        return mutual_links[:(OPTIONS - 1)]
+                     ", ".join(mutual_links[:(utils.TWEET_OPTIONS - 1)]))
+        return mutual_links[:(utils.TWEET_OPTIONS - 1)]
 
 
 def gen_quiz(wikipediaPage: WikipediaPage):
     sentence = format_extract(wikipediaPage.title, wikipediaPage.extract)
-    if sentence == INVALID:
-        return INVALID
+    if sentence == utils.INVALID:
+        return utils.INVALID
 
     mutual_links = get_mutual_link_pages(
         wikipediaPage.link_to, wikipediaPage.linked_from)
-    if mutual_links == INVALID:
-        return INVALID
+    if mutual_links == utils.INVALID:
+        return utils.INVALID
     options = mutual_links
     options.append(wikipediaPage.title)
     random.shuffle(options)
