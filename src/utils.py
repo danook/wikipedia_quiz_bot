@@ -1,7 +1,7 @@
 import json
 import log
 
-logger = log.get_logger(__name__, "log/test.log")
+logger = log.get_logger(__name__)
 
 INVALID = -1
 

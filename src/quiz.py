@@ -4,7 +4,7 @@ from wikipedia import WikipediaPage
 import log
 import utils
 
-logger = log.get_logger(__name__, "log/test.log")
+logger = log.get_logger(__name__)
 
 
 class Quiz:

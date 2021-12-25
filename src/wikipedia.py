@@ -4,7 +4,7 @@ LANGUAGE = "ja"
 NAMESPACE_MAIN = 0
 BASE_URL = 'https://' + LANGUAGE + '.wikipedia.org/w/api.php'
 
-logger = log.get_logger(__name__, "log/test.log")
+logger = log.get_logger(__name__)
 
 
 class WikipediaPage:

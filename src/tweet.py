@@ -5,7 +5,7 @@ import quiz
 
 POLL_DURATION_MINUTES = 1440
 
-logger = log.get_logger(__name__, "log/test.log")
+logger = log.get_logger(__name__)
 
 
 def error_to_str(error):

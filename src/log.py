@@ -1,7 +1,7 @@
 from logging import DEBUG, FileHandler, getLogger, Formatter
 
 
-def get_logger(module, filename):
+def get_logger(module, filename="log/wikiqbot.log"):
     logger = getLogger(module)
     logger.setLevel(DEBUG)  # TODO: Change this to INFO
     file_handler = FileHandler(filename)

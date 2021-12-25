@@ -10,7 +10,7 @@ import utils
 
 QUIZ_GENERATE_TRIALS = 15
 
-logger = log.get_logger(__name__, "log/test.log")
+logger = log.get_logger(__name__)
 
 
 def reply_answer(client: tweepy.Client):
