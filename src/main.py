@@ -1,7 +1,7 @@
 from random import shuffle
 import tweepy
 import requests
-import twitter_api_tokens
+import tokens
 import wikipedia
 import quiz
 import tweet
@@ -48,11 +48,11 @@ def generate_and_tweet_quiz(client: tweepy.Client):
 if __name__ == '__main__':
 
     client = tweepy.Client(
-        bearer_token=twitter_api_tokens.BEARER_TOKEN,
-        consumer_key=twitter_api_tokens.API_KEY,
-        consumer_secret=twitter_api_tokens.API_KEY_SECRET,
-        access_token=twitter_api_tokens.ACCESS_TOKEN,
-        access_token_secret=twitter_api_tokens.ACCESS_TOKEN_SECRET)
+        bearer_token=tokens.TWITTER_BEARER_TOKEN,
+        consumer_key=tokens.TWITTER_API_KEY,
+        consumer_secret=tokens.TWITTER_API_KEY_SECRET,
+        access_token=tokens.TWITTER_ACCESS_TOKEN,
+        access_token_secret=tokens.TWITTER_ACCESS_TOKEN_SECRET)
 
     reply_answer(client)
     generate_and_tweet_quiz(client)
