@@ -1,3 +1,4 @@
+import utils
 import log
 
 LANGUAGE = "ja"
@@ -25,7 +26,12 @@ def get_most_viewed_page_ids(session):
     resultJson = session.get(
         BASE_URL,
         params=params).json()
-    logger.info("Get a list of mostviewed pages")
+    logger.info("Got a list of mostviewed pages")
+
+    if not (resultJson.get('error') is None):
+        logger.error(
+            "MediaWiki API Error (in getting the most viewed pages): " + utils.error_to_str(resultJson['error']['code'], resultJson['error']['info']))
+        return utils.INVALID
 
     idlist = list()
     for page in resultJson['query']['pages'].values():
@@ -49,7 +55,12 @@ def get_page_info(id, session):
     resultJson = session.get(
         BASE_URL,
         params=params).json()
-    logger.info("Get the page data (id={0})".format(id))
+    logger.info("Got the page data (id={0})".format(id))
+
+    if not (resultJson.get('error') is None):
+        logger.error(
+            "MediaWiki API Error (in getting the page data): " + utils.error_to_str(resultJson['error']['code'], resultJson['error']['info']))
+        return utils.INVALID
 
     pageJson = resultJson['query']['pages'][str(id)]
     wikipediaPage = WikipediaPage(

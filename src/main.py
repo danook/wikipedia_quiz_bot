@@ -15,6 +15,10 @@ logger = log.get_logger(__name__)
 
 def reply_answer(client: tweepy.Client):
     tweet_id, answer = utils.load_tweet('data/prev_tweet.json')
+    if tweet_id is None or answer is None:
+        logger.warning("Cannot Reply: No data in prev_tweet.json")
+        return 1
+
     reply_id = tweet.reply_answer(client, tweet_id, answer)
     if reply_id == utils.INVALID:
         return 1
@@ -24,9 +28,15 @@ def reply_answer(client: tweepy.Client):
 def generate_and_tweet_quiz(client: tweepy.Client):
     with requests.Session() as session:
         page_ids = wikipedia.get_most_viewed_page_ids(session)
+        if page_ids == utils.INVALID:
+            return 1
+
         shuffle(page_ids)
         for id in page_ids[:QUIZ_GENERATE_TRIALS]:
             page = wikipedia.get_page_info(id, session)
+            if page == utils.INVALID:
+                continue
+
             generated_quiz = quiz.gen_quiz(page)
             if generated_quiz != utils.INVALID:
                 break

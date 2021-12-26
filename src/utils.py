@@ -9,6 +9,10 @@ TWEET_OPTIONS = 4
 MAX_TWEET_LENGTH = 140
 
 
+def error_to_str(code, message):
+    return message + "(error code: {0})".format(code)
+
+
 def save_tweet(file, tweet_id, answer):
     # Saves tweet id and the answer as json.
     save_data = {'tweet_id': tweet_id, 'answer': answer}
@@ -21,4 +25,4 @@ def load_tweet(file):
     # Loads tweet id and the answer from json
     with open(file, encoding='UTF-8') as f:
         data = json.load(f)
-    return data['tweet_id'], data['answer']
+    return data.get('tweet_id'), data.get('answer')

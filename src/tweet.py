@@ -1,15 +1,11 @@
 import tweepy
-import json
+import utils
 import log
 import quiz
 
 POLL_DURATION_MINUTES = 1440
 
 logger = log.get_logger(__name__)
-
-
-def error_to_str(error):
-    return error.message + "(error code: {0})".format(error.code)
 
 
 def get_answer_tweet_text(answer):
@@ -25,7 +21,7 @@ def reply_answer(client: tweepy.Client, tweet_id, answer):
     if len(response.errors) > 0:
         for error in response.errors:
             logger.error(
-                "Tweet error (in replying the answer): " + error_to_str(error))
+                "Tweet error (in replying the answer): " + utils.error_to_str(error.code, error.message))
         return -1
     else:
         logger.info("Replied the answer successfully.")
