@@ -13,10 +13,11 @@ QUIZ_GENERATE_TRIALS = 15
 logger = log.get_logger(__name__)
 
 
-def reply_answer(client: tweepy.Client):
-    tweet_id, answer = utils.load_tweet('data/prev_tweet.json')
+def reply_answer(client: tweepy.Client, service):
+    tweet_id, answer = utils.load_tweet(service)
     if tweet_id is None or answer is None:
-        logger.warning("Cannot Reply: No data in prev_tweet.json")
+        logger.warning(
+            "Cannot Reply: No data or invalid data in prev_tweet.json")
         return 1
 
     reply_id = tweet.reply_answer(client, tweet_id, answer)
@@ -25,7 +26,7 @@ def reply_answer(client: tweepy.Client):
     return 0
 
 
-def generate_and_tweet_quiz(client: tweepy.Client):
+def generate_and_tweet_quiz(client: tweepy.Client, service):
     with requests.Session() as session:
         page_ids = wikipedia.get_most_viewed_page_ids(session)
         if page_ids == utils.INVALID:
@@ -51,7 +52,7 @@ def generate_and_tweet_quiz(client: tweepy.Client):
         # Tweet failed.
         return 1
 
-    utils.save_tweet('data/prev_tweet.json', tweet_id, generated_quiz.answer)
+    utils.save_tweet(tweet_id, generated_quiz.answer, service)
     return 0
 
 
@@ -64,5 +65,7 @@ if __name__ == '__main__':
         access_token=tokens.TWITTER_ACCESS_TOKEN,
         access_token_secret=tokens.TWITTER_ACCESS_TOKEN_SECRET)
 
-    reply_answer(client)
-    generate_and_tweet_quiz(client)
+    service = utils.get_google_drive_service()
+
+    reply_answer(client, service)
+    generate_and_tweet_quiz(client, service)

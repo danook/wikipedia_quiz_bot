@@ -1,7 +1,6 @@
 wikiqbot_env/
 design.md
-info.json
-mostviewed.json
 src/__pycache__
 src/test.py
 src/twitter_api_tokens.txt
+tmp/*

@@ -1,7 +1,7 @@
 import logging
 
 
-def get_logger(module, filename="log/wikiqbot.log"):
+def get_logger(module, filename="/tmp/wikiqbot.log"):
     logger = logging.getLogger(module)
     logger.setLevel(logging.DEBUG)
 

@@ -38,7 +38,8 @@ def tweet(client: tweepy.Client, quiz: quiz.Quiz):
     )
     if len(response.errors) > 0:
         for error in response.errors:
-            logger.error("Tweet error: " + error_to_str(error))
+            logger.error("Tweet error: " +
+                         utils.error_to_str(error.code, error.message))
         return -1
     else:
         logger.info("Tweeted successfully.")
