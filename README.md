@@ -19,7 +19,8 @@ After a day, it stops the polling and posts the answer (in this case, "Twitter")
 > Answer: Twitter
 
 ## Languages & Technologies
-* Python
+* Python3
 * [Tweepy](https://www.tweepy.org/) (Python library for using Twitter API)
 * [Mediawiki API](https://www.mediawiki.org/wiki/API:Main_page) (API for Wikipedia)
 * [Heroku](https://www.heroku.com/)
+* [Google Drive API](https://developers.google.com/drive/api/)
