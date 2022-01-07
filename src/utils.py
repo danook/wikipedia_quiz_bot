@@ -2,6 +2,8 @@ import json
 import googleapiclient.discovery
 from googleapiclient.http import MediaInMemoryUpload
 from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
 import log
 import tokens
 
@@ -11,25 +13,28 @@ INVALID = -1
 
 TWEET_OPTIONS = 4
 MAX_TWEET_LENGTH = 140
-
-TMP_PATH = '/tmp/'
-GOOGLE_DRIVE_FILE_ID = '1lislCoO16jPtH4mMIjBuuaJxcqoqcOdF'  # TODO: Set this to env?
+MAX_POLL_OPTION_LENGTH = 25
 
 
 def error_to_str(code, message):
     return message + "(error code: {0})".format(code)
 
-
 # TODO: Handle Google Drive API in a different file?
 # TODO: Maybe we can integrate the rest of utils.py with tokens.py
 # TODO: Move error_to_str to log.py?
 
+
 def get_google_drive_service():
     creds = Credentials.from_authorized_user_info(
         json.loads(tokens.GOOGLE_DRIVE_API_TOKENS))
-    print(creds)
-    if not creds:
-        logger.error("Failed to get valid Google Drive API credentials")
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            logger.info(
+                "Failed to get valid Google Drive API credentials from the user info")
+            return INVALID
+
     service = googleapiclient.discovery.build(
         'drive', 'v3', credentials=creds)
     return service
@@ -42,14 +47,14 @@ def save_tweet(tweet_id, answer, google_drive_service):
     media = MediaInMemoryUpload(json.dumps(save_data).encode('utf-8'),
                                 mimetype='application/json')
     google_drive_service.files().update(
-        fileId=GOOGLE_DRIVE_FILE_ID,
+        fileId=tokens.GOOGLE_DRIVE_FILE_ID,
         media_body=media).execute()
     logger.info('Updated the file in Google Drive successfully')
 
 
 def load_tweet(google_drive_service):
     # Load the file content as byte string
-    file_id = GOOGLE_DRIVE_FILE_ID
+    file_id = tokens.GOOGLE_DRIVE_FILE_ID
     content = google_drive_service.files().get_media(fileId=file_id).execute()
 
     # Load tweet id and the answer from json

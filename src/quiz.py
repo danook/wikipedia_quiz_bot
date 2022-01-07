@@ -40,15 +40,18 @@ def format_extract(title, extract):
 
 def get_mutual_link_pages(link_to, linked_from):
     mutual_links = list(set(link_to) & set(linked_from))
-    if len(mutual_links) < utils.TWEET_OPTIONS - 1:
-        logger.info(
-            "Failed to generate a quiz: shortage of mutually-linked pages (there are only {0}).".format(len(mutual_links)))
-        return utils.INVALID
-    else:
-        random.shuffle(mutual_links)
-        logger.debug("Quiz options (except the answer): " +
-                     ", ".join(mutual_links[:(utils.TWEET_OPTIONS - 1)]))
-        return mutual_links[:(utils.TWEET_OPTIONS - 1)]
+    random.shuffle(mutual_links)
+
+    options = []
+    for page in mutual_links:
+        if len(page) <= utils.MAX_POLL_OPTION_LENGTH:
+            options.append(page)
+        if (len(options) == utils.TWEET_OPTIONS - 1):
+            return options
+
+    logger.info(
+        "Failed to generate a quiz: shortage of mutually-linked pages (there are only {0}).".format(len(mutual_links)))
+    return utils.INVALID
 
 
 def gen_quiz(wikipediaPage: WikipediaPage):
